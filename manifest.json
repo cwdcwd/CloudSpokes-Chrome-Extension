@@ -1,6 +1,7 @@
 {
   "name": "CloudSpokes",
   "version": "1.0",
+  "manifest_version": 2,
   "description": "Quick and handy access to the latest CloudSpokes challenges, your payments, leaderboards and more!",
   "browser_action": {
     "default_icon": "icon.png",
