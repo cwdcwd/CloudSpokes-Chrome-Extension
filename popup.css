@@ -1,0 +1,19 @@
+
+.cslist
+{
+	
+}
+
+#header
+{
+	background-image: url(images/cloudspokes-logo-hor.png);
+	background-repeat: no-repeat;
+	height: 128px;
+	width: 500px;
+}
+
+#nav
+{
+	margin-left: 128px;
+	padding-top: 70px;
+}

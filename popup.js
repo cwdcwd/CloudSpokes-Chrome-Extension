@@ -1,10 +1,24 @@
 
 
-var Challenge=Backbone.Model.extend( { } 	);
-var Challenges=Backbone.Collection.extend({ 
-	model: Challenge,
+var Challenge=Backbone.Model.extend( { 
+	initialize: function()
+	{
+
+	}
+});
+
+var Leaderboard=Backbone.Model.extend( { } );
+
+
+var CloudspokesCollection=Backbone.Collection.extend({ 
+	
 	batchSize: 50, //CWD-- arbitrary limit size
-	url: 'http://api.cloudspokes.com/v1/challenges',
+	
+
+	initialize: function()
+	{
+		this.on('remove', this.hideModel);
+	},
 
 	setupOptions: function(options)
 	{
@@ -14,6 +28,11 @@ var Challenges=Backbone.Collection.extend({
         if (options.data.limit === undefined) options.data.limit = this.batchSize; //CWD-- size of batch
 
         return options;
+	},
+
+	hideModel: function(model)
+	{
+		model.trigger('hide');
 	},
 
 	fetch: function (options) {
@@ -34,20 +53,7 @@ console.log(records);
                 lastCount=resp.count;
                 collection[options.add ? 'add' : 'reset'](records, options);
 
-                if (resp.count!=0) 
-                {
-                    var _options = _.clone(options);
-                    _options.data.offset+=_options.data.limit; //CWD-- increment to grab next set
-console.log('new options for call out: ');
-console.log(_options);
-					//collection.fetch(_options);
-                    //collection.sync.call(collection, 'read', collection, _options); //CWD-- call again till we get 0 back
-                } 
-                else 
-                {
-                    if (success) success(collection, resp, options); //CWD-- fire off success if one exists
-                }
-
+				if (success) success(collection, resp, options); //CWD-- fire off success if one exists
             };
 
             return this.sync.call(this, 'read', this, options);      
@@ -55,24 +61,85 @@ console.log(_options);
 
 });
 
+var Challenges=CloudspokesCollection.extend({ 
+	model: Challenge,
+	url: 'http://api.cloudspokes.com/v1/challenges',
+});
+
+
+var LeaderboardItems=CloudspokesCollection.extend({ 
+	model: Leaderboard,
+	url: 'http://api.cloudspokes.com/v1/leaderboard',
+});
+
+
+//CWD-- Views
+var ChallengeView=Backbone.View.extend({
+	tagName: 'li',
+	template: _.template( '<li> <%= name %>  </li>' ),
+
+	initialize: function() {
+		console.log('initializing ChallengeView');
+		this.model.bind('change', _.bind(this.render, this));
+		this.model.on('hide',this.remove,this);
+	},
+
+	render: function() {
+		this.$el.html(this.template(this.model.toJSON()));
+		return this;
+	}
+
+});
+
+var ChallengesView=Backbone.View.extend({
+	initialize: function() {
+		console.log('initializing ChallengesView');
+		//this.collection.bind('change', _.bind(this.render, this));
+		this.collection.on('reset', this.render, this);
+		this.collection.on('add', this.renderItem, this);
+	},
+
+	render: function()
+	{
+		console.log('render called');
+		this.$el.empty();
+        this.collection.forEach(function( item ) {
+        	this.renderItem( item );
+        }, this);
+    },
+
+    renderItem: function(item)
+    {
+    	var cv=new ChallengeView( { model: item } );
+    	this.$el.append(cv.render().el);
+    	console.log(item);
+    }
+});
+
 
 //CWD-- init
 $(function(){
-	var challenges=new Challenges();
-	challenges.fetch({reset: true, 
-		error: function(collection, response, options){ 
+	var openchallenges=new Challenges();
+	var leaderboarditems=new LeaderboardItems();
+	var openchallengesView=new ChallengesView({ 
+		collection: openchallenges,
+		el: $('#challenges')
+	});
+
+	openchallenges.fetch({reset: true, data: { open: true, order_by: 'end_date' },
+		error: function(model, xhr, options){ 
 			console.log('error!!!'); 
 		},
 		success: function(collection, response, options) {
 		console.log('final success');
-		/*
-		console.log('collection: ');
-		console.log(collection);
-		console.log('response: ');
-		console.log(response);
-		console.log('options: ');
-		console.log(options);
-		console.log(this);
-		*/
 	} });
+
+	leaderboarditems.fetch({reset: true, data: { period: 'month', limit: 10 },
+		error: function(model, xhr, options){ 
+			console.log('error!!!'); 
+		},
+		success: function(collection, response, options) {
+		console.log('final success');
+	} });
+
 });

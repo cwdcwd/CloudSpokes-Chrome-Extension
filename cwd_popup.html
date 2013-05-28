@@ -3,14 +3,29 @@
 <head>
 <!-- die Stylesheets -->
 <link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+<link href="popup.css" rel="stylesheet">
 
 <script src="js/jquery-1.7.1.min.js"></script>
 <script src="js/underscore-1.4.4-min.js"></script>
 <script src="js/backbone-1.0.0-min.js"></script>
+
 <script src="popup.js"></script>
 </head>
 <body>
-	
-	here
+<div id="header">
+	<div id="nav">
+		<ul class="nav nav-pills">
+		  <li class="active"><a href="#">Challenges</a></li>
+		  <li><a href="#">Leaderboard</a></li>
+		  <li><a href="#">Payments</a></li>
+		</ul>
+	</div>
+</div>
+<div class="cslist">
+	<ul id="challenges"></ul>
+</div>
+<div class="cslist" style="display: none;">
+	<ul id="leaderboard"></ul>
+</div>
 </body>
 </html>
