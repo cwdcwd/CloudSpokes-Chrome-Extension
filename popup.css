@@ -1,7 +1,7 @@
 
 .cslist
 {
-	
+
 }
 
 #header
@@ -9,11 +9,29 @@
 	background-image: url(images/cloudspokes-logo-hor.png);
 	background-repeat: no-repeat;
 	height: 128px;
-	width: 500px;
+	width: 600px;
 }
 
 #nav
 {
 	margin-left: 128px;
 	padding-top: 70px;
+}
+
+#loadingIcon
+{
+	margin: 10px auto;
+	width: 32px;
+}
+
+#cloudspokesdata
+{
+	width: 580px;
+	margin: 10px;
+}
+
+#cloudspokesdata tr.leaderboardItem img
+{
+	height: 30px;
+	width: 30px;
 }

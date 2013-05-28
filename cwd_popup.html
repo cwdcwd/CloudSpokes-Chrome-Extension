@@ -15,17 +15,16 @@
 <div id="header">
 	<div id="nav">
 		<ul class="nav nav-pills">
-		  <li class="active"><a href="#">Challenges</a></li>
-		  <li><a href="#">Leaderboard</a></li>
+		  <li class="challenges-pill active"><a href="cloudspokes/challenges">Challenges</a></li>
+		  <li><a href="cloudspokes/leaderboard">Leaderboard</a></li>
 		  <li><a href="#">Payments</a></li>
 		</ul>
 	</div>
 </div>
 <div class="cslist">
-	<ul id="challenges"></ul>
+	<div id="loadingIcon" ><img src="images/ajax-loader.gif" /></div>
+	<table id="cloudspokesdata" class="table table-striped table-condensed"></table>
 </div>
-<div class="cslist" style="display: none;">
-	<ul id="leaderboard"></ul>
-</div>
+
 </body>
 </html>
